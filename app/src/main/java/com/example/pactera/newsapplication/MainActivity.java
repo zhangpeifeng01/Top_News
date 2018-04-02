@@ -3,6 +3,7 @@ package com.example.pactera.newsapplication;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -16,6 +17,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pactera.newsapplication.Fagment.TopFagment;
+import com.example.pactera.newsapplication.Fagment.YuLeFagment;
 import com.example.pactera.newsapplication.adapter.RecyclerAdapter;
 import com.example.pactera.newsapplication.newsbean.NewsData;
 import com.google.gson.Gson;
@@ -36,52 +39,60 @@ public class MainActivity extends AppCompatActivity {
             "&key=386d3190efa79dda5048f554a62a0178";
     RecyclerAdapter adapter;
 
-    Handler handler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what==1){
-                final List<NewsData.ResultBean.DataBean> nrd= (List<NewsData.ResultBean.DataBean>) msg.obj;
-                adapter=new RecyclerAdapter(MainActivity.this,nrd);
-                recyclerView_.setAdapter(adapter);
-                adapter.setOnItemClickLitener(new RecyclerAdapter.OnItemClickLitener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent=new Intent(MainActivity.this,ShowActivity.class);
-                        intent.putExtra("url", nrd.get(position).getUrl());
-                        intent.putExtra("title", nrd.get(position).getTitle());
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onItemLongClick(View view, int position) {
-
-                    }
-                });
-            }
-        }
-    };
+//    Handler handler=new Handler(){
+//        @Override
+//        public void handleMessage(Message msg) {
+//            if (msg.what==1){
+//                final List<NewsData.ResultBean.DataBean> nrd= (List<NewsData.ResultBean.DataBean>) msg.obj;
+//                adapter=new RecyclerAdapter(MainActivity.this,nrd);
+//                recyclerView_.setAdapter(adapter);
+//                adapter.setOnItemClickLitener(new RecyclerAdapter.OnItemClickLitener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        Intent intent=new Intent(MainActivity.this,ShowActivity.class);
+//                        intent.putExtra("url", nrd.get(position).getUrl());
+//                        intent.putExtra("title", nrd.get(position).getTitle());
+//                        startActivity(intent);
+//                    }
+//
+//                    @Override
+//                    public void onItemLongClick(View view, int position) {
+//
+//                    }
+//                });
+//            }
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        GetData();
-        recyclerView_= (RecyclerView) findViewById(R.id.recyclerview);
+//        GetData();
+//        recyclerView_= (RecyclerView) findViewById(R.id.recyclerview);
         radioGroup= (RadioGroup) findViewById(R.id.rg);
-        recyclerView_.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        recyclerView_.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rb_top= (RadioButton) findViewById(R.id.rb_top);
         rb_yule= (RadioButton) findViewById(R.id.rb_yule);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView_.setLayoutManager(layoutManager);
+//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        recyclerView_.setLayoutManager(layoutManager);
+
+       FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
+        transaction1.replace(R.id.framelayout,new TopFagment()).commit();
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                switch (i){
                    case R.id.rb_top:
-
+                       FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                       transaction.replace(R.id.framelayout,new TopFagment());
+                       transaction.commit();
                        break;
                    case R.id.rb_yule:
+                       FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
+                       transaction2.replace(R.id.framelayout,new YuLeFagment());
+                       transaction2.commit();
                        break;
                }
             }
@@ -112,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                         Message message =new Message();
                         message.what=1;
                       message.obj = data;
-                        handler.sendMessage(message);
+//                        handler.sendMessage(message);
 
                     }
                 } catch (Exception e) {

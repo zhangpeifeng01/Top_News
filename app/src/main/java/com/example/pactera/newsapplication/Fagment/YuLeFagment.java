@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.pactera.newsapplication.MainActivity;
 import com.example.pactera.newsapplication.R;
 import com.example.pactera.newsapplication.ShowActivity;
 import com.example.pactera.newsapplication.adapter.RecyclerAdapter;
@@ -26,17 +25,18 @@ import com.squareup.okhttp.Response;
 import java.util.List;
 
 /**
- * Created by pactera on 2018/4/2.
+ * Created by Administrator on 2018/4/2 0002.
  */
-public class TopFagment extends Fragment{
-    final static String URL_="http://v.juhe.cn/toutiao/index?type=top" +
+
+public class YuLeFagment extends Fragment {
+    final static String URL_="http://v.juhe.cn/toutiao/index?type=yule" +
             "&key=386d3190efa79dda5048f554a62a0178";
     private RecyclerView recyclerView_;
     RecyclerAdapter adapter;
     Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what==1){
+            if (msg.what==2){
                 final List<NewsData.ResultBean.DataBean> nrd= (List<NewsData.ResultBean.DataBean>) msg.obj;
                 adapter=new RecyclerAdapter(getActivity(),nrd);
                 recyclerView_.setAdapter(adapter);
@@ -58,26 +58,24 @@ public class TopFagment extends Fragment{
         }
     };
     @Override
-     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_top, null);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_top, null);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView_= (RecyclerView) view.findViewById(R.id.recyclerview);
         recyclerView_.setLayoutManager(layoutManager);
         recyclerView_.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         GetData();
-               return view;
-           }
-
-              //重写setMenuVisibility方法，不然会出现叠层的现象
-             @Override
-       public void setMenuVisibility(boolean menuVisibile) {
-               super.setMenuVisibility(menuVisibile);
-              if (this.getView() != null) {
-                       this.getView().setVisibility(menuVisibile ? View.VISIBLE : View.GONE);
-                   }
-          }
-
+        return view;
+    }
+    //重写setMenuVisibility方法，不然会出现叠层的现象
+    @Override
+    public void setMenuVisibility(boolean menuVisibile) {
+        super.setMenuVisibility(menuVisibile);
+        if (this.getView() != null) {
+            this.getView().setVisibility(menuVisibile ? View.VISIBLE : View.GONE);
+        }
+    }
     public void GetData(){
         new Thread(new Runnable() {
             @Override
@@ -98,7 +96,7 @@ public class TopFagment extends Fragment{
 
 
                         Message message =new Message();
-                        message.what=1;
+                        message.what=2;
                         message.obj = data;
                         handler.sendMessage(message);
 
@@ -111,5 +109,4 @@ public class TopFagment extends Fragment{
 
 
     }
-
 }

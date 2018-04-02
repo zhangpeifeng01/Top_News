@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+
     tools:context="com.example.pactera.newsapplication.MainActivity">
 
         <LinearLayout
@@ -26,6 +25,7 @@
                   android:layout_weight="1"
                   android:button="@null"
                   android:gravity="center"
+                  android:textSize="34px"
                   android:textColor="@drawable/selector_tab_text"
                   android:checked="true"
                   android:text="头条" />
@@ -37,18 +37,23 @@
                   android:layout_weight="1"
                   android:button="@null"
                   android:gravity="center"
+                  android:textSize="34px"
                   android:textColor="@drawable/selector_tab_text"
                   android:text="娱乐" />
           </RadioGroup>
 
         </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/recyclerview"-->
+        <!--android:layout_below="@id/linearlayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--/>-->
+    <FrameLayout
         android:layout_below="@id/linearlayout"
+        android:id="@+id/framelayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        />
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>
