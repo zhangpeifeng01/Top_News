@@ -1,6 +1,7 @@
 package com.example.pactera.newsapplication.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.pactera.newsapplication.R;
 import com.example.pactera.newsapplication.newsbean.NewsData;
 import java.util.List;
@@ -50,9 +53,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         holder.item_tv_bottom.setText(mlist.get(position).getAuthor_name());
         holder.item_tv_time.setText(mlist.get(position).getDate());
         if (!mlist.get(position).getThumbnail_pic_s().isEmpty()){
-            Glide.with(mcontext).load(mlist.get(position).getThumbnail_pic_s()).into(holder.imageView);
+//            Glide.with(mcontext).load(mlist.get(position).getThumbnail_pic_s())
+//                    .asBitmap().into(new SimpleTarget<Bitmap>() {
+//                @Override
+//                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                    holder.imageView.setImageBitmap(resource);
+//                }
+//            }); //方法中设置asBitmap可以设置回调类型
+            Glide.with(mcontext).load(mlist.get(position).getThumbnail_pic_s())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .override(100, 100)
+                    .into(holder.imageView);
         }else if (!mlist.get(position).getThumbnail_pic_s02().isEmpty()){
-            Glide.with(mcontext).load(mlist.get(position).getThumbnail_pic_s02()).into(holder.imageView);
+            Glide.with(mcontext).load(mlist.get(position).getThumbnail_pic_s02())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .override(100, 100)
+                    .into(holder.imageView);
         }
 
         if (mOnItemClickLitener!=null){
