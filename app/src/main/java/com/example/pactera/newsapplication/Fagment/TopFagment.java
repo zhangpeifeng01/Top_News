@@ -12,12 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.pactera.newsapplication.MainActivity;
 import com.example.pactera.newsapplication.R;
 import com.example.pactera.newsapplication.ShowActivity;
 import com.example.pactera.newsapplication.adapter.RecyclerAdapter;
+import com.example.pactera.newsapplication.mydb.SQLiteUtils;
 import com.example.pactera.newsapplication.newsbean.NewsData;
+import com.example.pactera.newsapplication.utils.NetworkUtil;
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -79,36 +82,55 @@ public class TopFagment extends Fragment{
           }
 
     public void GetData(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象
-                    Request request = new Request.Builder()
-                            .url(URL_)//请求接口。如果需要传U拼接到接口后面。
-                            .build();//创建Request 对象
-                    Response response = null;
-                    response = client.newCall(request).execute();//得到Response 对象
-                    if (response.isSuccessful()) {
-                        //此时的代码执行在子线程，修改UI的操作请使用handler跳转到UI线程。
-                        Gson gson=new Gson();
-                        NewsData newsData = gson.fromJson(response.body().string(), NewsData.class);
-                        List<NewsData.ResultBean.DataBean> data = newsData.getResult().getData();
-                        Log.d("news",data.toString());
+        if (NetworkUtil.isNetworkAvailable(getActivity())) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象
+                        Request request = new Request.Builder()
+                                .url(URL_)//请求接口。如果需要传U拼接到接口后面。
+                                .build();//创建Request 对象
+                        Response response = null;
+                        response = client.newCall(request).execute();//得到Response 对象
+                        if (response.isSuccessful()) {
+                            //此时的代码执行在子线程，修改UI的操作请使用handler跳转到UI线程。
+                            Gson gson = new Gson();
+                            NewsData newsData = gson.fromJson(response.body().string(), NewsData.class);
+                            List<NewsData.ResultBean.DataBean> data = newsData.getResult().getData();
+                            Log.d("news", data.toString());
+                            SQLiteUtils db = new SQLiteUtils(getActivity());
+                            for (int i=0;i<data.size();i++){
+                                db.InsertDB(data.get(i));
+                            }
+                            Message message = new Message();
+                            message.what = 1;
+                            message.obj = data;
+                            handler.sendMessage(message);
 
 
-                        Message message =new Message();
-                        message.what=1;
-                        message.obj = data;
-                        handler.sendMessage(message);
-
+                        } else {
+                            SQLiteUtils db = new SQLiteUtils(getActivity());
+                            List<NewsData.ResultBean.DataBean> list = db.QueryDB();
+                            Toast.makeText(getActivity(), "查询数据成功", Toast.LENGTH_SHORT).show();
+                            Message message = new Message();
+                            message.what = 1;
+                            message.obj = list;
+                            handler.sendMessage(message);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        }).start();
-
+            }).start();
+        }else {
+            SQLiteUtils db = new SQLiteUtils(getActivity());
+            List<NewsData.ResultBean.DataBean> list = db.QueryDB();
+            Message message = new Message();
+            message.what = 1;
+            message.obj = list;
+            handler.sendMessage(message);
+        }
 
     }
 

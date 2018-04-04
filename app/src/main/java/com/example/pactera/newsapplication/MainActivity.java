@@ -3,6 +3,7 @@ package com.example.pactera.newsapplication;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.example.pactera.newsapplication.Fagment.TopFagment;
 import com.example.pactera.newsapplication.Fagment.YuLeFagment;
 import com.example.pactera.newsapplication.adapter.RecyclerAdapter;
 import com.example.pactera.newsapplication.newsbean.NewsData;
+import com.example.pactera.newsapplication.utils.NetworkUtil;
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -68,70 +70,53 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        GetData();
-//        recyclerView_= (RecyclerView) findViewById(R.id.recyclerview);
         radioGroup= (RadioGroup) findViewById(R.id.rg);
-//        recyclerView_.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rb_top= (RadioButton) findViewById(R.id.rb_top);
         rb_yule= (RadioButton) findViewById(R.id.rb_yule);
-//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        recyclerView_.setLayoutManager(layoutManager);
-
-       FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
-        transaction1.replace(R.id.framelayout,new TopFagment()).commit();
+        //开启事务
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        //设置为默认界面 MainHomeFragment
+        ft.add(R.id.framelayout,mFragments[0]).commit();
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                switch (i){
                    case R.id.rb_top:
-                       FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                       transaction.replace(R.id.framelayout,new TopFagment());
-                       transaction.commit();
+                       setIndexSelected(0);
                        break;
                    case R.id.rb_yule:
-                       FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
-                       transaction2.replace(R.id.framelayout,new YuLeFagment());
-                       transaction2.commit();
+                       setIndexSelected(1);
                        break;
                }
             }
         });
 
-
-
     }
-    public void GetData(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象
-                    Request request = new Request.Builder()
-                            .url(URL_)//请求接口。如果需要传U拼接到接口后面。
-                            .build();//创建Request 对象
-                    Response response = null;
-                    response = client.newCall(request).execute();//得到Response 对象
-                    if (response.isSuccessful()) {
-                        //此时的代码执行在子线程，修改UI的操作请使用handler跳转到UI线程。
-                       Gson gson=new Gson();
-                        NewsData newsData = gson.fromJson(response.body().string(), NewsData.class);
-                        List<NewsData.ResultBean.DataBean> data = newsData.getResult().getData();
-                        Log.d("news",data.toString());
+    //数组 存储Fragment
+    Fragment[] mFragments = new Fragment[] {
+            new TopFagment(),
+            new YuLeFagment(),
+    };
+    //当前Fragent的下标
 
-
-                        Message message =new Message();
-                        message.what=1;
-                      message.obj = data;
-//                        handler.sendMessage(message);
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-
+    private int currentIndex;
+    //设置Fragment页面
+    private void setIndexSelected(int index) {
+        if (currentIndex == index) {
+            return;
+        }
+        //开启事务
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        //隐藏当前Fragment
+        ft.hide(mFragments[currentIndex]);
+        //判断Fragment是否已经添加
+        if (!mFragments[index].isAdded()) {
+            ft.add(R.id.framelayout,mFragments[index]).show(mFragments[index]);
+        }else {
+            //显示新的Fragment
+            ft.show(mFragments[index]);
+        }
+        ft.commit();
+        currentIndex = index;
     }
 }

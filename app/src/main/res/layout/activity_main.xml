@@ -12,16 +12,17 @@
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:background="@color/colorAccent"
-            android:layout_height="wrap_content">
+            android:layout_height="36dp">
           <RadioGroup
               android:id="@+id/rg"
+              android:layout_gravity="center"
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
               <RadioButton
                   android:id="@+id/rb_top"
                   android:layout_width="0dp"
-                  android:layout_height="wrap_content"
+                  android:layout_height="24dp"
                   android:layout_weight="1"
                   android:button="@null"
                   android:gravity="center"
@@ -33,7 +34,7 @@
               <RadioButton
                   android:id="@+id/rb_yule"
                   android:layout_width="0dp"
-                  android:layout_height="wrap_content"
+                  android:layout_height="24dp"
                   android:layout_weight="1"
                   android:button="@null"
                   android:gravity="center"
@@ -44,12 +45,6 @@
 
         </LinearLayout>
 
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/recyclerview"-->
-        <!--android:layout_below="@id/linearlayout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--/>-->
     <FrameLayout
         android:layout_below="@id/linearlayout"
         android:id="@+id/framelayout"

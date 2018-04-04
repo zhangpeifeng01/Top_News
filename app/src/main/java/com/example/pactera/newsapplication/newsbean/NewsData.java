@@ -86,6 +86,18 @@ public class NewsData {
         }
 
         public static class DataBean {
+            public DataBean(String author_name, String category, String date, String thumbnail_pic_s02, String thumbnail_pic_s03, String thumbnail_pic_s, String title, String uniquekey, String url) {
+                this.author_name = author_name;
+                this.category = category;
+                this.date = date;
+                this.thumbnail_pic_s02 = thumbnail_pic_s02;
+                this.thumbnail_pic_s03 = thumbnail_pic_s03;
+                this.thumbnail_pic_s = thumbnail_pic_s;
+                this.title = title;
+                this.uniquekey = uniquekey;
+                this.url = url;
+            }
+
             @Override
             public String toString() {
                 return "DataBean{" +
