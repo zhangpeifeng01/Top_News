@@ -101,7 +101,7 @@ public class TopFagment extends Fragment{
                             Log.d("news", data.toString());
                             SQLiteUtils db = new SQLiteUtils(getActivity());
                             for (int i=0;i<data.size();i++){
-                                db.InsertDB(data.get(i));
+                                db.InsertDB(data.get(i),"Top_table");
                             }
                             Message message = new Message();
                             message.what = 1;
@@ -111,7 +111,7 @@ public class TopFagment extends Fragment{
 
                         } else {
                             SQLiteUtils db = new SQLiteUtils(getActivity());
-                            List<NewsData.ResultBean.DataBean> list = db.QueryDB();
+                            List<NewsData.ResultBean.DataBean> list = db.QueryDB("Top_table");
                             Toast.makeText(getActivity(), "查询数据成功", Toast.LENGTH_SHORT).show();
                             Message message = new Message();
                             message.what = 1;
@@ -125,7 +125,7 @@ public class TopFagment extends Fragment{
             }).start();
         }else {
             SQLiteUtils db = new SQLiteUtils(getActivity());
-            List<NewsData.ResultBean.DataBean> list = db.QueryDB();
+            List<NewsData.ResultBean.DataBean> list = db.QueryDB("Top_table");
             Message message = new Message();
             message.what = 1;
             message.obj = list;

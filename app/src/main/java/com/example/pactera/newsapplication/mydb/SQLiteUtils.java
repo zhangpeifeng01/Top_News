@@ -26,7 +26,7 @@ public class SQLiteUtils {
            }
 
 
-    public void InsertDB(NewsData.ResultBean.DataBean topdb){
+    public void InsertDB(NewsData.ResultBean.DataBean topdb,String table){
         //生成ContentValues对象 //key:列名，value:想插入的值
         ContentValues cv = new ContentValues();
         cv.put("author_name",topdb.getAuthor_name());
@@ -38,12 +38,12 @@ public class SQLiteUtils {
         cv.put("title",topdb.getTitle());
         cv.put("uniquekey",topdb.getUniquekey());
         cv.put("url",topdb.getUrl());
-        db.insert("Top_table",null,cv);
+        db.insert(table,null,cv);
 
     }
-    public List<NewsData.ResultBean.DataBean> QueryDB(){
+    public List<NewsData.ResultBean.DataBean> QueryDB(String table){
         List<NewsData.ResultBean.DataBean> list=new ArrayList<>();
-      String sql="select * from Top_table order by _id ;";
+      String sql="select * from "+table+" order by _id ;";
                  Cursor cursor=db.rawQuery(sql,null);
      while (cursor.moveToNext()) {
             String author_name = cursor.getString(cursor.getColumnIndex("author_name"));
